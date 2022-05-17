@@ -1,16 +1,22 @@
 import * as WebBrowser from 'expo-web-browser';
-import { StyleSheet, TouchableOpacity, ColorSchemeName } from 'react-native';
+import { StyleSheet, TouchableOpacity, ColorSchemeName , Pressable} from 'react-native';
 
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import useColorScheme from '../hooks/useColorScheme';
-export default function EditScreenInfo({ path }: { path: string }) {
+export default function EditScreenInfo({ navigation, path }: {navigation: any, path: string }) {
   return (
     <View>
       <View style={styles.getStartedContainer}>
-
+      <Pressable
+                onPress={() => {
+                   navigation.navigate('Modal',{value: 'wordOfTheDay'});
+                }}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}>
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
@@ -23,6 +29,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
           Word of the day!
 
         </Text>
+        </Pressable>
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
@@ -56,6 +63,13 @@ export default function EditScreenInfo({ path }: { path: string }) {
           />
           Help
         </Text>
+        <Pressable
+                onPress={() => {
+                   navigation.navigate('Modal',{value: 'randomWord'});
+                }}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}>
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
@@ -66,7 +80,9 @@ export default function EditScreenInfo({ path }: { path: string }) {
             style={{ marginRight: 10 }}
           />
           Random word
+        
         </Text>
+        </Pressable>
         {/* <View
           style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
           darkColor="rgba(255,255,255,0.05)"
