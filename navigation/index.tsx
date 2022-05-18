@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable, TextInput, View, StyleSheet } from 'react-native';
+import { ColorSchemeName, Pressable, TextInput, View, StyleSheet, Dimensions } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import Colors from '../constants/Colors';
@@ -19,15 +19,21 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import HistoryInfo from '../screens/HistoryInfo';
+import BookmarkInfo from '../screens/Bookmark';
+import HelpScreen from '../screens/HelpScreen';
+import ModalScreenVi from '../screens/ModalScreenVi';
 
 let title = '';
-
+const width = Dimensions.get("screen").width
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
+    
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
+
     </NavigationContainer>
   );
 }
@@ -39,14 +45,22 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+
 function RootNavigator() {
   return (
     <Stack.Navigator>
+
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} options={{title: 'Search Result'}} />
+        <Stack.Screen name="Modal" component={ModalScreen} options={{ title: 'Search Result' }} />
       </Stack.Group>
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name="ModalVi" component={ModalScreenVi} options={{ title: 'Kết quả tìm kiếm' }} />
+      </Stack.Group>
+      <Stack.Screen name="History" component={HistoryInfo} options={{ title: 'History' }} />
+      <Stack.Screen name="Bookmark" component={BookmarkInfo} options={{ title: 'Bookmark' }} />
+      <Stack.Screen name="Help" component={HelpScreen} options={{ title: 'Help' }} />
     </Stack.Navigator>
   );
 }
@@ -75,95 +89,65 @@ function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title:'Từ điển Anh - Anh',
+          title: 'Từ điển Anh - Anh',
           headerTitle: !isSearch ? 'Từ điển Anh - Anh' : '',
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
           headerLeft: () => (
-            isSearch ?
-              (
-                <div style={{
-                  "height": "50%",
-                  "width": "100vw",
-                  "display": 'flex'
-                }}
-                >
+            !!isSearch &&
+            (
+              <View style={{
+                "height": "50%",
+                "width": width,
+                "display": 'flex',
+                'flexDirection': "row"
+              }}
+              >
                 <Pressable
-                // onPress={() => navigation.navigate('Modal')}
-                onPress={() => {
-                  setSearching(false);
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}>
-                <FontAwesome
-                  name="arrow-left"
-                  size={25}
-                  color={Colors[colorScheme].text}
-                  style={{ marginRight: 15, marginLeft: 10 }}
-                />
-              </Pressable> : ''
-                  <TextInput
-                    editable
-                    placeholder='Type in the word'
-                    style={{
-                      "borderColor": '#FFFFFF',
-                      "borderWidth": 1,
-                      'color': "#FFFFFF",
-                      "height": "100%",
-                      "width": "90%"
-                    }}
-
-                    onChangeText={(text: any) => setValue(text)}
-                    value={value}
+                  onPress={() => {
+                    setSearching(false);
+                  }}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.5 : 1,
+                  })}>
+                  <FontAwesome
+                    name="arrow-left"
+                    size={25}
+                    color={Colors[colorScheme].text}
+                    style={{ marginRight: 15, marginLeft: 10 }}
                   />
-                  <Pressable
-                    onPress={() => navigation.navigate('Modal', {value: value})}
-                    style={({ pressed }) => ({
-                      opacity: pressed ? 0.5 : 1,
-                    })}>
-                    <FontAwesome
-                      name="search"
-                      size={25}
-                      color={Colors[colorScheme].text}
-                      style={{ marginRight: 10,marginLeft: 10, display: 'flex', justifyContent: 'flex-end', flex: 1, alignItems: "center" }}
-                    />
-                  </Pressable>
-                </div>
-              ) : ''
-          ),
-          headerRight: () => (
-            !isSearch ?
-              <Pressable
-                // onPress={() => navigation.navigate('Modal')}
-                onPress={() => {
-                  setSearching(true);
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}>
-                <FontAwesome
-                  name="search"
-                  size={25}
-                  color={Colors[colorScheme].text}
-                  style={{ marginRight: 15 }}
+                </Pressable>
+
+                <TextInput
+                  onSubmitEditing={() => navigation.navigate('Modal', { value: value })}
+                  editable
+                  placeholder='Type in the word'
+                  placeholderTextColor='gray'
+                  style={{
+                    "borderColor": '#FFFFFF',
+                    "borderWidth": 1,
+                    'color': "#FFFFFF",
+                    "height": "100%",
+                    "width": width * 0.8,
+                    "padding": 5
+                  }}
+
+                  onChangeText={(text: any) => setValue(text)}
+                  value={value}
                 />
-              </Pressable> : ''
+              </View>
+            )
           ),
-        })}
-      />
-      <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
-        options={{
-          title: 'Từ điển Anh - Việt',
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
           headerRight: () => (
+            !isSearch &&
             <Pressable
               // onPress={() => navigation.navigate('Modal')}
+              onPress={() => {
+                setSearching(true);
+                // navigation.openDrawer();
+              }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              
               <FontAwesome
                 name="search"
                 size={25}
@@ -172,7 +156,80 @@ function BottomTabNavigator() {
               />
             </Pressable>
           ),
-        }}
+        })}
+      />
+      <BottomTab.Screen
+        name="TabTwo"
+        component={TabTwoScreen}
+        options={({ navigation }: RootTabScreenProps<'TabTwo'>) => ({
+          title: 'Từ điển Anh - Việt',
+          headerTitle: !isSearch ? 'Từ điển Anh - Việt' : '',
+          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          headerLeft: () => (
+            !!isSearch &&
+            (
+              <View style={{
+                "height": "50%",
+                "width": width,
+                "display": 'flex',
+                'flexDirection': "row"
+              }}
+              >
+                <Pressable
+                  onPress={() => {
+                    setSearching(false);
+                  }}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.5 : 1,
+                  })}>
+                  <FontAwesome
+                    name="arrow-left"
+                    size={25}
+                    color={Colors[colorScheme].text}
+                    style={{ marginRight: 15, marginLeft: 10 }}
+                  />
+                </Pressable>
+
+                <TextInput
+                  onSubmitEditing={() => navigation.navigate('ModalVi', { value: value })}
+                  editable
+                  placeholder='Nhập vào từ muốn tìm'
+                  placeholderTextColor='gray'
+                  style={{
+                    "borderColor": '#FFFFFF',
+                    "borderWidth": 1,
+                    'color': "#FFFFFF",
+                    "height": "100%",
+                    "width": width * 0.8,
+                    "padding": 5
+                  }}
+
+                  onChangeText={(text: any) => setValue(text)}
+                  value={value}
+                />
+              </View>
+            )
+          ),
+          headerRight: () => (
+            !isSearch &&
+            <Pressable
+              // onPress={() => navigation.navigate('Modal')}
+              onPress={() => {
+                setSearching(true);
+                // navigation.openDrawer();
+              }}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}>
+              <FontAwesome
+                name="search"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        })}
       />
     </BottomTab.Navigator>
   );

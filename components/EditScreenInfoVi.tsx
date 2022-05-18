@@ -1,39 +1,42 @@
 import * as WebBrowser from 'expo-web-browser';
-import { StyleSheet, TouchableOpacity, ColorSchemeName } from 'react-native';
+import { StyleSheet, TouchableOpacity, ColorSchemeName,Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import useColorScheme from '../hooks/useColorScheme';
-export default function EditScreenInfoVi({ path }: { path: string }) {
+export default function EditScreenInfoVi({ navigation, path }: { navigation: any, path: string })  {
   return (
-    <View>
       <View style={styles.getStartedContainer}>
+      <Pressable
+          onPress={() => {
+            navigation.navigate('History');
+          }}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.5 : 1,
+          })}>
 
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          <FontAwesome
-            name="file"
-            size={25}
-            style={{ marginRight: 10 }}
-          />
-          Từ khoá trong ngày!
+          <Text
+            style={styles.getStartedText}
+            lightColor="rgba(0,0,0,0.8)"
+            darkColor="rgba(255,255,255,0.8)">
+            <FontAwesome
+              name="file-text"
+              size={25}
+              style={{ marginRight: 10 }}
+            />
+            Lịch sử
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Bookmark');
+          }}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.5 : 1,
+          })}>
 
-        </Text>
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          <FontAwesome
-            name="file-text"
-            size={25}
-            style={{ marginRight: 10 }}
-          />
-          Lịch sử
-        </Text>
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
@@ -45,6 +48,14 @@ export default function EditScreenInfoVi({ path }: { path: string }) {
           />
           Đánh dấu
         </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Help');
+          }}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.5 : 1,
+          })}>
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
@@ -54,35 +65,11 @@ export default function EditScreenInfoVi({ path }: { path: string }) {
             size={25}
             style={{ marginRight: 10 }}
           />
-          Hỏi đáp
+          Giúp đỡ
         </Text>
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          <FontAwesome
-            name="compass"
-            size={25}
-            style={{ marginRight: 10 }}
-          />
-          Từ ngẫu nhiên
-        </Text>
-        {/* <View
-          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-          darkColor="rgba(255,255,255,0.05)"
-          lightColor="rgba(0,0,0,0.05)">
-          <MonoText>{path}</MonoText>
-        </View> */}
+        </Pressable>
       </View>
 
-      {/* <View style={styles.helpContainer}>
-        <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
-            Tap here if your app doesn't automatically update after making changes
-          </Text>
-        </TouchableOpacity>
-      </View> */}
-    </View>
   );
 }
 
@@ -96,6 +83,7 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
+    backgroundColor: '#2970E5'
   },
   homeScreenFilename: {
     marginVertical: 7,

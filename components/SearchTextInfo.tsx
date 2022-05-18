@@ -10,124 +10,115 @@ export default function SearchTextInfo({ data, path }: { data: any, path: string
 
   const [sound, setSound] = useState({} as any);
   async function playSound(url: any) {
-    console.log('Loading Sound', url);
     const sound = new Audio.Sound();
     await sound.loadAsync({ uri: url })
     setSound(sound);
-    console.log('Playing Sound');
     await sound.playAsync();
   }
-  const wordInfo = data && data[0] || {};
-  const meanings = wordInfo.meanings;
-  console.log('word info', wordInfo);
+  const wordInfo = !!data && data[0] || {};
+  const meanings = wordInfo.meanings || [];
   return (
-    <View>
       <View style={styles.getStartedContainer}>
         <Text
-          style={styles.getStartedText}
+          style={styles.pronunciation}
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)">
-          <b>Pronunciation</b> {wordInfo.phonetic}
+          Pronunciation: {wordInfo.phonetic}
         </Text>
-        {wordInfo.phonetics && wordInfo.phonetics.map((value: any, key: any) => {
-          console.log(value, key);
+        {!!wordInfo.phonetics && wordInfo.phonetics.map((value: any, key: any) => {
           return (
-            <div style={{ display: "flex" }}>
+            <View key={key} style={{ display: "flex" ,flexDirection: 'row', backgroundColor: '#0EC0A7'}}>
               <Text
-                style={styles.getStartedText}
+                style={styles.getStartedTextItalic}
                 lightColor="rgba(0,0,0,0.8)"
                 darkColor="rgba(255,255,255,0.8)">
-                <i>{key == 0 ? "(enUK)" : "(enUS)"}</i> : {value.text}
+                {key == 0 ? "(enUK)" : "(enUS)"} : {value.text || ""}
               </Text>
-              {value.audio && 
-              <Pressable
-                onPress={async () => await playSound(value.audio)}
-              >
+              {!!value.audio ?
+                <Pressable
+                  onPress={async () => await playSound(value.audio)}
+                >
 
-                <FontAwesome
-                  name="file-audio-o"
-                  size={18}
-                  style={{ marginLeft: 15 }}
-                  color="#FFFFFF"
-                />
-              </Pressable>
-        }
-            </div>
+                  <FontAwesome
+                    name="file-audio-o"
+                    size={18}
+                    style={{ marginLeft: 15 }}
+                    color="#FFFFFF"
+                  />
+                </Pressable> : null
+              }
+            </View>
           )
         })}
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        {meanings && meanings.map((value: any, key: any) => {
+        {!!meanings && meanings.map((value: any, key: any) => {
           const definitions = value.definitions || [];
           return (
-            <div>
+            <View style={{backgroundColor: '#0EC0A7'}} key={key}>
               <Text
                 style={styles.infoText}
                 lightColor="rgba(0,0,0,0.8)"
                 darkColor="rgba(255,255,255,0.8)">
-                {value.partOfSpeech}
+                {value.partOfSpeech || ''}
               </Text>
-              {definitions && definitions.map((def: any, num: any) => {
-                console.log('definition',def);
+              {!!definitions && definitions.map((def: any, num: any) => {
                 return (
-                  <div style={{display: 'grid'}}>
+                  <View key={num} style={{ display: 'flex' ,backgroundColor: '#0EC0A7'}}>
                     <Text
                       style={styles.getStartedText}
                       lightColor="rgba(0,0,0,0.8)"
                       darkColor="rgba(255,255,255,0.8)">
-                      {num+1}. {def.definition}
+                      {num + 1}. {def.definition || ''}
                     </Text>
-                    { def.synonyms.length != 0 &&
+                    {!!def.synonyms && def.synonyms.length != 0 &&
                       <Text
                         style={styles.getStartedText}
                         lightColor="rgba(0,0,0,0.8)"
                         darkColor="rgba(255,255,255,0.8)">
-                        Synonyms: {def.synonyms.join(", ").toString()}
+                        Synonyms: {!!def.synonyms && def.synonyms.join(", ").toString() || ''}
                       </Text>
                     }
-                    {def.antonyms.length != 0 &&
+                    {!!def.antonyms && def.antonyms.length != 0 &&
                       <Text
                         style={styles.getStartedText}
                         lightColor="rgba(0,0,0,0.8)"
                         darkColor="rgba(255,255,255,0.8)">
-                        Antonyms: {def.antonyms.join(", ").toString()}
+                        Antonyms: {!!def.antonyms && def.antonyms.join(", ").toString() || ''}
                       </Text>
                     }
-                    {def.example &&
+                    {!!def.example &&
                       <Text
                         style={styles.exampleText}
                         lightColor="rgba(0,0,0,0.8)"
                         darkColor="rgba(255,255,255,0.8)">
-                        Example: {def.example}
+                        Example: {def.example || ''}
                       </Text>
                     }
-                  </div>
+                  </View>
                 )
               })}
-               { value.synonyms.length != 0 &&
-                      <Text
-                        style={styles.infoDetail}
-                        lightColor="rgba(0,0,0,0.8)"
-                        darkColor="rgba(255,255,255,0.8)">
-                        Synonyms: {value.synonyms.join(", ").toString()}
-                      </Text>
-                    }
-                    {value.antonyms.length != 0 &&
-                      <Text
-                        style={styles.infoDetail}
-                        lightColor="rgba(0,0,0,0.8)"
-                        darkColor="rgba(255,255,255,0.8)">
-                        Antonyms: {value.antonyms.join(", ").toString()}
-                      </Text>
-                    }
-              
-              ;
-            </div>
+              {!!value.synonyms && value.synonyms.length != 0 &&
+                <Text
+                  style={styles.infoDetail}
+                  lightColor="rgba(0,0,0,0.8)"
+                  darkColor="rgba(255,255,255,0.8)">
+                  Synonyms: {!!value.synonyms && value.synonyms.join(", ").toString() || ''}
+                </Text>
+              }
+              {!!value.antonyms && value.antonyms.length != 0 &&
+                <Text
+                  style={styles.infoDetail}
+                  lightColor="rgba(0,0,0,0.8)"
+                  darkColor="rgba(255,255,255,0.8)">
+                  Antonyms: {!!value.synonyms && value.antonyms.join(", ").toString() || ''}
+                </Text>
+              }
+            </View>
           )
 
         })}
 
       </View>
-    </View>
   );
 }
 
@@ -140,11 +131,12 @@ function handleHelpPress() {
 const styles = StyleSheet.create({
   getStartedContainer: {
     marginHorizontal: 50,
+    backgroundColor: '#0EC0A7'
   },
   separator: {
     marginVertical: 10,
     height: 1,
-    width: '80vw',
+    // width: '80vw',
   },
   homeScreenFilename: {
     marginVertical: 7,
@@ -158,6 +150,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     lineHeight: 15,
   },
+  getStartedTextItalic: {
+    fontSize: 13,
+    marginBottom: 10,
+    lineHeight: 15,
+    fontStyle: 'italic'
+  },
+  pronunciation: {
+    fontSize: 13,
+    marginBottom: 10,
+    lineHeight: 15,
+    fontWeight: 'bold'
+  },
   infoText: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#00FFDC'
   },
-  exampleText:{
+  exampleText: {
     fontSize: 12,
     fontStyle: 'italic',
     fontWeight: '300'
