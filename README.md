@@ -1,2 +1,2 @@
-# lose-weight-apps
+# En-dictionary
 University Project 2022
