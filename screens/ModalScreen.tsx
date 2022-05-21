@@ -82,6 +82,9 @@ export default function ModalScreen(props: any) {
               if (word) {
                 setFavorite(true);
               }
+              else {
+                setFavorite(false);
+              }
               await addHistory(db, value);
           }
         }).catch(err => {
