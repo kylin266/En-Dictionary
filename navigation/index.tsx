@@ -23,6 +23,7 @@ import HistoryInfo from '../screens/HistoryInfo';
 import BookmarkInfo from '../screens/Bookmark';
 import HelpScreen from '../screens/HelpScreen';
 import ModalScreenVi from '../screens/ModalScreenVi';
+import TabThreeScreen from '../screens/TabThreeScreen';
 
 let title = '';
 const width = Dimensions.get("screen").width
@@ -231,6 +232,12 @@ function BottomTabNavigator() {
           ),
         })}
       />
+      <BottomTab.Screen  name="TabThree"
+        component={TabThreeScreen}
+        options={() => ({
+          title: 'Thông tin hỗ trợ',
+          tabBarIcon: ({ color }) => <FontAwesome size={30} name="question-circle" color={color} />,
+        })}/>
     </BottomTab.Navigator>
   );
 }

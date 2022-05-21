@@ -34,19 +34,19 @@ export const createTable = async (db: any) => {
 
     console.log('created');
     // cleardata
-    let clearData = 'DELETE FROM history';
-    await db.transaction(async (tx: any) => {
-        await tx.executeSql(clearData);
-    });
-    let clearData2 = 'DELETE FROM bookmark';
-    await db.transaction(async (tx: any) => {
-        await tx.executeSql(clearData2);
-    });
+    // let clearData = 'DELETE FROM history';
+    // await db.transaction(async (tx: any) => {
+    //     await tx.executeSql(clearData);
+    // });
+    // let clearData2 = 'DELETE FROM bookmark';
+    // await db.transaction(async (tx: any) => {
+    //     await tx.executeSql(clearData2);
+    // });
 
-    let clearData3 = 'DELETE FROM notes';
-    await db.transaction(async (tx: any) => {
-        await tx.executeSql(clearData3);
-    });
+    // let clearData3 = 'DELETE FROM notes';
+    // await db.transaction(async (tx: any) => {
+    //     await tx.executeSql(clearData3);
+    // });
 
 
 

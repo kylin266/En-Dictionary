@@ -7,10 +7,10 @@ export default function HelpScreen({ navigation }: RootStackScreenProps<'NotFoun
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-      Dictionary API is—and always will be—free. 
-      Our mission is to provide users with an API that they can use to build a game, 
-      learning application, or next-generation speech and text technology. 
-      Your donation directly helps the development of Dictionary API and keeps the server running.
+      Dictionary
+      Từ điển trực tuyến miễn phí cho người Việt
+      Cung cấp 2 bộ từ điển chính: Anh – Việt, và Anh – Anh
+      Kho từ đồ sộ cùng hệ thống gợi ý từ thông minh,giúp tra cứu nhanh chóng nhất.
       </Text>
       <TouchableOpacity onPress={() => navigation.replace('Root')} style={styles.link}>
         <Text style={styles.linkText}>Click here to get back!</Text>
