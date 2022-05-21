@@ -9,6 +9,7 @@ import wordData from '../words.json';
 import { addHistory, deleteBookmark, getWordBookmarkByWord, getWordHistoryByWord, insertBookmark, openDatabase } from '../db';
 export default function ModalScreen(props: any) {
   const { value } = props.route.params;
+  const {navigation} = props;
   const [data, setData] = useState([] as any);
   const [title, setTitle] = useState(value);
   const [err, setErr] = useState('');
@@ -16,7 +17,6 @@ export default function ModalScreen(props: any) {
   const [favorite, setFavorite] = useState(false);
   let api = `https://api.dictionaryapi.dev/api/v2/entries/en/${value}`
   useEffect(() => {
-
     if (value == 'randomWord') {
       var item = wordData[Math.floor(Math.random() * wordData.length)];
       setTitle(item);
@@ -70,11 +70,12 @@ export default function ModalScreen(props: any) {
     }
     else {
       setTitle(value);
+
       (async () => {
         await axios.get(api).then(async res => {
           if (res.data) {
-            if (isMounted) {
-              setData(res.data); setMounted(false);
+              setData(res.data); 
+              setMounted(false);
               const db = await openDatabase();
 
               const word = await getWordBookmarkByWord(db, value);
@@ -82,7 +83,6 @@ export default function ModalScreen(props: any) {
                 setFavorite(true);
               }
               await addHistory(db, value);
-            };
           }
         }).catch(err => {
           setMounted(false)
@@ -94,7 +94,7 @@ export default function ModalScreen(props: any) {
     return () => {
       setMounted(false);
     };
-  }, [])
+  }, [value])
   return (
 
     <ScrollView style={styles.container}>
@@ -134,7 +134,7 @@ export default function ModalScreen(props: any) {
         }
       </Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      {!!data && <SearchTextInfo data={data} path="/screens/ModalScreen.tsx" />}
+      {!!data && <SearchTextInfo navigation={navigation} data={data} path="/screens/ModalScreen.tsx" />}
       {data.length == 0 && <Text style={styles.title}>{err}</Text>}
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />

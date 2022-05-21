@@ -118,7 +118,7 @@ function BottomTabNavigator() {
                 </Pressable>
 
                 <TextInput
-                  onSubmitEditing={() => navigation.navigate('Modal', { value: value })}
+                  onSubmitEditing={() => navigation.navigate('Modal', { value: value, navigation: navigation })}
                   editable
                   placeholder='Type in the word'
                   placeholderTextColor='gray'
